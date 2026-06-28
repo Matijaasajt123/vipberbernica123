@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css">
 <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet">
-<script src="https://app.cal.com/embed/embed.js"></script>
+
 <style>
 :root {
   --gold: #c9a84c;
@@ -94,6 +94,8 @@ body {
   pointer-events: none;
   z-index: 10001;
   transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
 .cursor-follower {
@@ -105,7 +107,8 @@ body {
   pointer-events: none;
   z-index: 10000;
   transform: translate(-50%, -50%);
-  transition: transform 0.15s ease-out, width 0.2s, height 0.2s;
+  transition: transform 0.15s ease-out, width 0.2s, height 0.2s, opacity 0.2s;
+  opacity: 0;
 }
 
 .cursor-follower.cursor--active {
@@ -1270,30 +1273,7 @@ section {
   </div>
 </section>
 
-<!-- Features -->
-<section id="features">
-  <div class="container">
-    <div class="features-grid">
-      <div class="image-frame" data-aos="fade-up">
-        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=800&q=80" alt="Frizer">
-      </div>
-      <div data-aos="fade-up" data-aos-delay="150">
-        <span class="section-label">Zašto Mi</span>
-        <h2 class="section-title">Šta Nas Izdvaja</h2>
-        <ul class="feature-list">
-          <li><i class="bi bi-check-circle-fill"></i> Iskusni Master Frizeri</li>
-          <li><i class="bi bi-check-circle-fill"></i> Moderna Oprema i Tehnike</li>
-          <li><i class="bi bi-check-circle-fill"></i> Opuštajuća Atmosfera</li>
-          <li><i class="bi bi-check-circle-fill"></i> Online Zakazivanje</li>
-          <li><i class="bi bi-check-circle-fill"></i> Personalizovani Pristup</li>
-          <li><i class="bi bi-check-circle-fill"></i> Zadovoljstvo Garantovano</li>
-          <li><i class="bi bi-check-circle-fill"></i> Tačnost i Poštovanje Vašeg Vremena</li>
-          <li><i class="bi bi-check-circle-fill"></i> Povoljne Cene</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <!-- Team -->
 <section id="tim">
@@ -1350,13 +1330,6 @@ section {
         <div class="role">Master Frizer</div>
         <button class="btn-select" data-barber="jovan">Izaberi</button>
       </div>
-    </div>
-
-    <!-- Step 2: Cal.com Embed -->
-    <div id="embed-wrapper" style="display:none;">
-      <div class="embed-title" id="embed-title">Izaberite Termin</div>
-      <div id="cal-embed"></div>
-      <a class="go-back-link" id="go-back-link">&larr; Želite drugog frizera? Vratite se na izbor</a>
     </div>
   </div>
 </section>
@@ -1455,47 +1428,71 @@ const CAL_LINK_NEMANJA = "https://cal.com/matija-ivkovic-qvrktv/zakazivanje-term
 const CAL_LINK_JOVAN = "https://cal.com/matija-ivkovic-qvrktv/jovan";
 // ============================================
 
-// State
-let selectedBarber = null;
+// Cal.com popup init
+(function (C, A, L) {
+  let p = function (a, ar) { a.q.push(ar); };
+  let d = C.document;
+  C.Cal = C.Cal || function () {
+    let cal = C.Cal; let ar = arguments;
+    if (!cal.loaded) {
+      cal.ns = {}; cal.q = cal.q || [];
+      d.head.appendChild(d.createElement("script")).src = A;
+      cal.loaded = true;
+    }
+    if (ar[0] === L) {
+      const api = function () { p(api, arguments); };
+      const namespace = ar[1];
+      api.q = api.q || [];
+      typeof namespace === "string" ? (cal.ns[namespace] = api) && p(api, ar) : p(cal, ar);
+      return;
+    }
+    p(cal, ar);
+  };
+})(window, "https://app.cal.com/embed/embed.js", "init");
+
+Cal("init", "nemanja", { origin: "https://cal.com" });
+Cal.ns["nemanja"]("ui", { theme: "dark", hideEventTypeDetails: false, layout: "month_view" });
+
+Cal("init", "jovan", { origin: "https://cal.com" });
+Cal.ns["jovan"]("ui", { theme: "dark", hideEventTypeDetails: false, layout: "month_view" });
 
 // Preloader
 const preloader = document.getElementById('preloader');
 const preloaderProgress = document.getElementById('preloader-progress');
 
-setTimeout(() => {
-  preloaderProgress.style.width = '100%';
-}, 100);
-
-setTimeout(() => {
-  preloader.style.opacity = '0';
-}, 2800);
-
-setTimeout(() => {
-  preloader.style.display = 'none';
-}, 3100);
+setTimeout(() => { preloaderProgress.style.width = '100%'; }, 100);
+setTimeout(() => { preloader.style.opacity = '0'; }, 2800);
+setTimeout(() => { preloader.style.display = 'none'; }, 3100);
 
 // Custom Cursor
 const cursorDot = document.getElementById('cursor-dot');
 const cursorFollower = document.getElementById('cursor-follower');
 
-let mouseX = 0, mouseY = 0;
-let followerX = 0, followerY = 0;
+let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+let followerX = mouseX, followerY = mouseY;
+let cursorVisible = false;
 
 if (window.matchMedia('(pointer: fine)').matches) {
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
+    if (!cursorVisible) {
+      cursorDot.style.opacity = '1';
+      cursorFollower.style.opacity = '1';
+      cursorVisible = true;
+    }
     cursorDot.style.left = mouseX + 'px';
     cursorDot.style.top = mouseY + 'px';
   });
 
-  document.addEventListener('mousedown', () => {
-    cursorFollower.classList.add('cursor--active');
+  document.addEventListener('mouseleave', () => {
+    cursorDot.style.opacity = '0';
+    cursorFollower.style.opacity = '0';
+    cursorVisible = false;
   });
 
-  document.addEventListener('mouseup', () => {
-    cursorFollower.classList.remove('cursor--active');
-  });
+  document.addEventListener('mousedown', () => { cursorFollower.classList.add('cursor--active'); });
+  document.addEventListener('mouseup', () => { cursorFollower.classList.remove('cursor--active'); });
 
   function animateCursor() {
     followerX += (mouseX - followerX) * 0.15;
@@ -1510,95 +1507,42 @@ if (window.matchMedia('(pointer: fine)').matches) {
 // Navbar scroll
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
-  if (window.scrollY > 80) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
-  }
+  navbar.classList.toggle('scrolled', window.scrollY > 80);
 });
 
 // Mobile menu
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobile-menu');
 const mobileClose = document.getElementById('mobile-close');
-const mobileLinks = document.querySelectorAll('.mobile-link');
 
-hamburger.addEventListener('click', () => {
-  mobileMenu.classList.add('open');
-});
-
-mobileClose.addEventListener('click', () => {
-  mobileMenu.classList.remove('open');
-});
-
-mobileLinks.forEach(link => {
-  link.addEventListener('click', () => {
-    mobileMenu.classList.remove('open');
-  });
+hamburger.addEventListener('click', () => { mobileMenu.classList.add('open'); });
+mobileClose.addEventListener('click', () => { mobileMenu.classList.remove('open'); });
+document.querySelectorAll('.mobile-link').forEach(link => {
+  link.addEventListener('click', () => { mobileMenu.classList.remove('open'); });
 });
 
 // Fancybox
 Fancybox.bind('[data-fancybox="gallery"]');
 
 // AOS
-AOS.init({
-  duration: 700,
-  once: true,
-  offset: 80
-});
+AOS.init({ duration: 700, once: true, offset: 80 });
 
-// Booking state machine
+// Barber selection — popup
 const cardNemanja = document.getElementById('card-nemanja');
 const cardJovan = document.getElementById('card-jovan');
-const embedWrapper = document.getElementById('embed-wrapper');
-const embedTitle = document.getElementById('embed-title');
-const calEmbed = document.getElementById('cal-embed');
-const goBackLink = document.getElementById('go-back-link');
 
 function selectBarber(barber) {
-  selectedBarber = barber;
-
   if (barber === 'nemanja') {
     cardNemanja.classList.add('active');
     cardJovan.classList.remove('active');
-    embedTitle.textContent = 'Izaberite Termin sa Nemanjom';
-    loadCalEmbed(CAL_LINK_NEMANJA);
+    Cal.ns["nemanja"]("modal", { calLink: CAL_LINK_NEMANJA });
   } else if (barber === 'jovan') {
     cardJovan.classList.add('active');
     cardNemanja.classList.remove('active');
-    embedTitle.textContent = 'Izaberite Termin sa Jovanom';
-    loadCalEmbed(CAL_LINK_JOVAN);
-  }
-
-  embedWrapper.style.display = 'block';
-  setTimeout(() => {
-    embedWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100);
-}
-
-function loadCalEmbed(link) {
-  calEmbed.innerHTML = '';
-  if (typeof Cal !== 'undefined' && link && link !== 'CAL_LINK_NEMANJA' && link !== 'CAL_LINK_JOVAN') {
-    Cal.inline({
-      elementOrSelector: '#cal-embed',
-      calLink: link,
-      config: {
-        theme: 'dark'
-      }
-    });
+    Cal.ns["jovan"]("modal", { calLink: CAL_LINK_JOVAN });
   }
 }
 
-function resetBooking() {
-  selectedBarber = null;
-  cardNemanja.classList.remove('active');
-  cardJovan.classList.remove('active');
-  calEmbed.innerHTML = '';
-  embedWrapper.style.display = 'none';
-  document.getElementById('barber-selection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-// Barber selection cards
 document.querySelectorAll('.barber-select-card .btn-select').forEach(btn => {
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -1606,18 +1550,12 @@ document.querySelectorAll('.barber-select-card .btn-select').forEach(btn => {
   });
 });
 
-// Team section buttons
 document.querySelectorAll('.btn-book-nemanja, .btn-book-jovan').forEach(btn => {
   btn.addEventListener('click', () => {
     selectBarber(btn.dataset.barber);
   });
 });
-
-// Go back link
-goBackLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  resetBooking();
-});
 </script>
 </body>
+</html>
 </html>
