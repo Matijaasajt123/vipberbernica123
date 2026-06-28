@@ -1,967 +1,1623 @@
+<!-- SETUP: 1. Find const CAL_LINK_NEMANJA and const CAL_LINK_JOVAN at the top of the script tag and replace the placeholder strings with your real Cal.com booking page links. 2. In Cal.com dashboard set appointment duration to 30 minutes, working hours Monday to Saturday 09:00 to 18:00, required booking fields Ime + Prezime + Broj telefona, enable email or SMS notification to barber on each new booking. 3. Replace the two Unsplash team photo URLs for Nemanja and Jovan with real photos of the barbers by swapping those image src values. -->
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VIP Berbernica – Zakaži Termin</title>
-  <meta name="description" content="VIP Berbernica – Premium muška berbernica. Zakažite termin sa Nemanjom ili Jovanom online." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    /* ─── RESET & BASE ─────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --navy:       #0a1628;
-      --navy-mid:   #0f1f3d;
-      --navy-light: #162444;
-      --gold:       #c9a84c;
-      --gold-light: #f0d060;
-      --gold-dim:   rgba(201,168,76,0.35);
-      --white:      #ffffff;
-      --text-muted: rgba(255,255,255,0.6);
-      --radius:     10px;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--navy);
-      color: var(--white);
-      font-family: 'Inter', sans-serif;
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* ─── SCROLLBAR ─────────────────────────────────────────── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--navy); }
-    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-
-    /* ─── UTILITY ───────────────────────────────────────────── */
-    .section-label {
-      display: inline-block;
-      font-family: 'Oswald', sans-serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.25em;
-      color: var(--gold);
-      text-transform: uppercase;
-      border: 1px solid var(--gold-dim);
-      padding: 4px 14px;
-      border-radius: 20px;
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-family: 'Oswald', sans-serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      color: var(--white);
-      text-transform: uppercase;
-      line-height: 1.15;
-    }
-
-    .gold-line {
-      width: 60px;
-      height: 2px;
-      background: linear-gradient(90deg, var(--gold), var(--gold-light));
-      margin: 18px auto 0;
-      border-radius: 2px;
-    }
-
-    /* ─── NAV ───────────────────────────────────────────────── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 14px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: transparent;
-      transition: background 0.35s, backdrop-filter 0.35s, box-shadow 0.35s;
-    }
-
-    nav.scrolled {
-      background: rgba(10,22,40,0.95);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 1px 0 var(--gold-dim);
-    }
-
-    .nav-logo img {
-      height: 46px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .nav-logo-placeholder {
-      height: 46px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .nav-logo-placeholder .scissors-icon {
-      font-size: 1.4rem;
-    }
-
-    .nav-logo-placeholder span {
-      font-family: 'Oswald', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      color: var(--gold);
-    }
-
-    .nav-cta {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--navy);
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      border: none;
-      padding: 9px 22px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.15s;
-      text-decoration: none;
-    }
-
-    .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
-
-    /* ─── HERO ──────────────────────────────────────────────── */
-    #hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 120px 24px 80px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Gold geometric grid background */
-    #hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(201,168,76,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(201,168,76,0.06) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-    }
-
-    /* Radial glow center */
-    #hero::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(ellipse at center, rgba(201,168,76,0.08) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    .hero-logo {
-      margin-bottom: 36px;
-    }
-
-    .hero-logo img {
-      width: clamp(200px, 40vw, 320px);
-      height: auto;
-      object-fit: contain;
-      filter: drop-shadow(0 0 30px rgba(201,168,76,0.3));
-    }
-
-    .hero-logo-placeholder {
-      width: clamp(200px, 40vw, 320px);
-      height: 130px;
-      background: var(--navy-mid);
-      border: 1px solid var(--gold-dim);
-      border-radius: var(--radius);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-      gap: 6px;
-    }
-
-    .hero-logo-placeholder .ph-scissors { font-size: 2.5rem; }
-
-    .hero-logo-placeholder .ph-name {
-      font-family: 'Oswald', sans-serif;
-      font-size: 1rem;
-      letter-spacing: 0.18em;
-      color: var(--gold);
-    }
-
-    .hero-logo-placeholder .ph-sub {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      letter-spacing: 0.1em;
-    }
-
-    .hero-headline {
-      font-family: 'Oswald', sans-serif;
-      font-size: clamp(2.4rem, 6vw, 4rem);
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      line-height: 1.1;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, #ffffff 40%, var(--gold-light) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-sub {
-      font-size: 1.05rem;
-      color: var(--text-muted);
-      margin-bottom: 40px;
-      font-weight: 300;
-      letter-spacing: 0.02em;
-    }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'Oswald', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--navy);
-      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-      border: none;
-      padding: 16px 38px;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 24px rgba(201,168,76,0.35);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(201,168,76,0.5);
-    }
-
-    .btn-primary .arrow { transition: transform 0.2s; }
-    .btn-primary:hover .arrow { transform: translateX(4px); }
-
-    /* Scroll indicator */
-    .scroll-hint {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      opacity: 0.4;
-      animation: bounce 2s infinite;
-    }
-
-    .scroll-hint span {
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    .scroll-hint svg { color: var(--gold); }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(6px); }
-    }
-
-    /* ─── SECTIONS SHARED ───────────────────────────────────── */
-    .section {
-      padding: 90px 24px;
-    }
-
-    .section-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 56px;
-    }
-
-    /* ─── BARBER SELECTION ──────────────────────────────────── */
-    #barber-section {
-      background: var(--navy-mid);
-    }
-
-    .barber-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
-      max-width: 820px;
-      margin: 0 auto;
-    }
-
-    @media (max-width: 600px) {
-      .barber-grid { grid-template-columns: 1fr; }
-    }
-
-    .barber-card {
-      position: relative;
-      background: var(--navy-light);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 14px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
-    }
-
-    .barber-card:hover {
-      border-color: var(--gold-dim);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-    }
-
-    .barber-card.selected {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 1px var(--gold), 0 12px 40px rgba(201,168,76,0.25);
-    }
-
-    .barber-badge {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      color: var(--navy);
-      font-family: 'Oswald', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      padding: 4px 10px;
-      border-radius: 20px;
-      opacity: 0;
-      transform: scale(0.8);
-      transition: opacity 0.3s, transform 0.3s;
-      z-index: 2;
-    }
-
-    .barber-card.selected .barber-badge {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .barber-photo-wrap {
-      width: 100%;
-      aspect-ratio: 4/5;
-      overflow: hidden;
-      background: var(--navy);
-    }
-
-    .barber-photo-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.4s;
-    }
-
-    .barber-card:hover .barber-photo-wrap img { transform: scale(1.04); }
-
-    .barber-photo-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: linear-gradient(160deg, var(--navy-light), var(--navy));
-    }
-
-    .barber-photo-placeholder .ph-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: var(--gold-dim);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-    }
-
-    .barber-photo-placeholder .ph-initials {
-      font-family: 'Oswald', sans-serif;
-      font-size: 0.8rem;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
-    }
-
-    .barber-info {
-      padding: 22px 22px 26px;
-      text-align: center;
-    }
-
-    .barber-name {
-      font-family: 'Oswald', sans-serif;
-      font-size: 1.6rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--white);
-      margin-bottom: 4px;
-    }
-
-    .barber-title {
-      font-size: 0.82rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 20px;
-    }
-
-    .btn-select {
-      font-family: 'Oswald', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gold);
-      background: transparent;
-      border: 1px solid var(--gold);
-      padding: 11px 32px;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: background 0.25s, color 0.25s, transform 0.15s;
-      width: 100%;
-    }
-
-    .btn-select:hover {
-      background: var(--gold);
-      color: var(--navy);
-    }
-
-    .barber-card.selected .btn-select {
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      color: var(--navy);
-      border-color: transparent;
-    }
-
-    /* ─── BOOKING SECTION ───────────────────────────────────── */
-    #booking-section {
-      background: var(--navy);
-    }
-
-    .booking-title-wrap {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    #booking-title { transition: opacity 0.3s; }
-
-    #cal-embed {
-      max-width: 900px;
-      margin: 0 auto;
-      min-height: 600px;
-      background: var(--navy-mid);
-      border-radius: 14px;
-      border: 1px solid var(--gold-dim);
-      overflow: hidden;
-      position: relative;
-    }
-
-    #cal-embed-placeholder {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      color: var(--text-muted);
-      text-align: center;
-      padding: 40px;
-    }
-
-    #cal-embed-placeholder .ph-icon { font-size: 3rem; opacity: 0.3; }
-
-    #cal-embed-placeholder p {
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    #cal-embed-placeholder strong {
-      color: var(--gold);
-      font-weight: 500;
-    }
-
-    .back-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 28px;
-      font-size: 0.88rem;
-      color: var(--gold);
-      cursor: pointer;
-      transition: opacity 0.2s;
-      letter-spacing: 0.04em;
-      text-decoration: none;
-      background: none;
-      border: none;
-    }
-
-    .back-link:hover { opacity: 0.7; }
-    .back-link svg { transition: transform 0.2s; }
-    .back-link:hover svg { transform: translateX(-4px); }
-
-    /* ─── CENOVNIK ──────────────────────────────────────────── */
-    #cenovnik-section {
-      background: var(--navy-mid);
-    }
-
-    .cenovnik-wrap {
-      display: flex;
-      justify-content: center;
-    }
-
-    .cenovnik-img-container {
-      position: relative;
-      max-width: 480px;
-      width: 100%;
-    }
-
-    .cenovnik-img-container img {
-      width: 100%;
-      height: auto;
-      border-radius: var(--radius);
-      border: 1px solid rgba(201,168,76,0.4);
-      display: block;
-    }
-
-    .cenovnik-placeholder {
-      width: 100%;
-      max-width: 480px;
-      height: 580px;
-      background: var(--navy-light);
-      border: 1px solid rgba(201,168,76,0.4);
-      border-radius: var(--radius);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      color: var(--text-muted);
-    }
-
-    .cenovnik-placeholder .ph-icon { font-size: 2.5rem; opacity: 0.3; }
-
-    .cenovnik-placeholder p {
-      font-size: 0.9rem;
-      letter-spacing: 0.05em;
-    }
-
-    /* ─── FOOTER ────────────────────────────────────────────── */
-    footer {
-      background: #060f1e;
-      border-top: 1px solid var(--gold-dim);
-      padding: 48px 24px 32px;
-      text-align: center;
-    }
-
-    .footer-logo {
-      margin-bottom: 20px;
-    }
-
-    .footer-logo img {
-      height: 60px;
-      width: auto;
-      object-fit: contain;
-      opacity: 0.85;
-    }
-
-    .footer-logo-placeholder {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 0;
-    }
-
-    .footer-logo-placeholder .scissors-sm { font-size: 1.2rem; }
-
-    .footer-logo-placeholder span {
-      font-family: 'Oswald', sans-serif;
-      font-size: 1rem;
-      letter-spacing: 0.14em;
-      color: var(--gold);
-    }
-
-    .footer-name {
-      font-family: 'Oswald', sans-serif;
-      font-size: 0.78rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-top: 10px;
-      margin-bottom: 18px;
-    }
-
-    .footer-ig {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--gold);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      transition: opacity 0.2s;
-      margin-bottom: 16px;
-    }
-
-    .footer-ig:hover { opacity: 0.7; }
-
-    .footer-hours {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      letter-spacing: 0.05em;
-    }
-
-    .footer-divider {
-      width: 40px;
-      height: 1px;
-      background: var(--gold-dim);
-      margin: 16px auto;
-    }
-
-    /* ─── ANIMATIONS ────────────────────────────────────────── */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .fade-in-d1 { transition-delay: 0.1s; }
-    .fade-in-d2 { transition-delay: 0.2s; }
-    .fade-in-d3 { transition-delay: 0.3s; }
-
-    /* ─── RESPONSIVE TWEAKS ─────────────────────────────────── */
-    @media (max-width: 768px) {
-      nav { padding: 12px 20px; }
-      .section { padding: 64px 20px; }
-      #cal-embed { min-height: 700px; }
-    }
-
-    @media (max-width: 480px) {
-      .btn-primary { padding: 14px 28px; font-size: 0.95rem; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIP Berbernica — Premium Berbernica Beograd</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gravitas+One&family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css">
+<link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet">
+<script src="https://app.cal.com/embed/embed.js"></script>
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-light: #f0d060;
+  --navy: #0a1628;
+  --navy-dark: #060f1a;
+  --gold-border: rgba(201,168,76,0.25);
+  --gold-glow: rgba(201,168,76,0.15);
+  --white: #ffffff;
+  --muted: rgba(255,255,255,0.65);
+  --card-bg: rgba(255,255,255,0.04);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter Tight', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+@media (pointer: coarse) {
+  body { cursor: auto; }
+  .cursor-dot, .cursor-follower { display: none !important; }
+}
+
+/* Preloader */
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: var(--navy);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+
+.preloader-logo {
+  font-family: 'Gravitas One', cursive;
+  font-size: 2rem;
+  color: var(--gold);
+  letter-spacing: 4px;
+  margin-bottom: 2rem;
+}
+
+.preloader-bar {
+  width: 200px;
+  height: 2px;
+  background: var(--gold-border);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.preloader-progress {
+  height: 100%;
+  width: 0%;
+  background: var(--gold);
+  transition: width 2.5s ease-out;
+}
+
+/* Custom Cursor */
+.cursor-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10001;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-follower {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease-out, width 0.2s, height 0.2s;
+}
+
+.cursor-follower.cursor--active {
+  transform: translate(-50%, -50%) scale(0.7);
+}
+
+/* Topbar */
+.topbar {
+  background: var(--gold);
+  padding: 8px 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--navy);
+}
+
+.topbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar a {
+  color: var(--navy);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.2s;
+}
+
+.topbar a:hover { opacity: 0.7; }
+
+/* Navbar */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 18px 0;
+  transition: background 0.4s, backdrop-filter 0.4s;
+}
+
+.navbar.scrolled {
+  background: rgba(10,22,40,0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-family: 'Gravitas One', cursive;
+  font-size: 1.3rem;
+  color: var(--gold);
+  text-decoration: none;
+  letter-spacing: 2px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: width 0.3s;
+}
+
+.nav-links a:hover {
+  color: var(--gold);
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.nav-cta {
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  background: var(--navy);
+  padding: 10px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.3s;
+}
+
+.nav-cta:hover {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--gold);
+  transition: 0.3s;
+}
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,22,40,0.98);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.mobile-menu.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.mobile-menu a {
+  color: var(--white);
+  text-decoration: none;
+  font-family: 'Gravitas One', cursive;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  transition: color 0.3s;
+}
+
+.mobile-menu a:hover {
+  color: var(--gold);
+}
+
+.mobile-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Section Label */
+.section-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: linear-gradient(rgba(10,22,40,0.88), rgba(10,22,40,0.7)), url('https://images.unsplash.com/photo-1621605815971-8e4b1234b7a3?w=1920&q=80') center/cover no-repeat;
+  text-align: center;
+  padding: 120px 24px 80px;
+}
+
+.hero-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+
+.hero-title {
+  font-family: 'Gravitas One', cursive;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1.1;
+  color: var(--white);
+  margin-bottom: 24px;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 500px;
+  margin: 0 auto 40px;
+  font-weight: 300;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  background: var(--navy);
+  padding: 14px 36px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+.btn-secondary {
+  border: 1px solid var(--gold-border);
+  color: var(--white);
+  background: transparent;
+  padding: 14px 36px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.btn-secondary:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.scroll-indicator .line {
+  width: 1px;
+  height: 40px;
+  background: var(--gold);
+  animation: bounceLine 2s ease-in-out infinite;
+}
+
+@keyframes bounceLine {
+  0%, 100% { transform: scaleY(1); transform-origin: top; }
+  50% { transform: scaleY(0.3); transform-origin: top; }
+}
+
+/* Sections */
+section {
+  padding: 100px 0;
+}
+
+.section-title {
+  font-family: 'Gravitas One', cursive;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  margin-bottom: 48px;
+  color: var(--white);
+}
+
+/* About */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.image-frame {
+  position: relative;
+}
+
+.image-frame img {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.image-frame::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: -16px;
+  bottom: -16px;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  z-index: -1;
+  opacity: 0.4;
+}
+
+.about-content p {
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+/* Services */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.service-card {
+  background: var(--card-bg);
+  border: 1px solid var(--gold-border);
+  border-radius: 8px;
+  padding: 40px 28px;
+  text-align: center;
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold);
+}
+
+.service-card i {
+  font-size: 2.2rem;
+  color: var(--gold);
+  margin-bottom: 20px;
+  display: block;
+}
+
+.service-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--white);
+}
+
+.service-card p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* Pricing */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.pricing-card {
+  background: var(--card-bg);
+  border: 1px solid var(--gold-border);
+  border-radius: 8px;
+  padding: 40px 28px;
+  position: relative;
+  transition: transform 0.3s;
+}
+
+.pricing-card:hover {
+  transform: translateY(-4px);
+}
+
+.pricing-card.featured {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.06);
+  transform: scale(1.03);
+}
+
+.pricing-card.featured:hover {
+  transform: scale(1.03) translateY(-4px);
+}
+
+.pricing-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 18px;
+  border-radius: 20px;
+}
+
+.pricing-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gold);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.pricing-list {
+  list-style: none;
+  margin-bottom: 32px;
+}
+
+.pricing-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--gold-border);
+  font-size: 0.9rem;
+}
+
+.pricing-list li:last-child {
+  border-bottom: none;
+}
+
+.pricing-list .price {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.pricing-card .btn-primary {
+  width: 100%;
+  text-align: center;
+}
+
+/* Gallery */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  aspect-ratio: 1;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.08);
+}
+
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10,22,40,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.gallery-item:hover .gallery-overlay {
+  opacity: 1;
+}
+
+.gallery-overlay i {
+  font-size: 2rem;
+  color: var(--gold);
+}
+
+/* Features */
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.feature-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feature-list li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.feature-list i {
+  color: var(--gold);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* Team */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+}
+
+.team-card {
+  background: var(--card-bg);
+  border: 1px solid var(--gold-border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.team-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold);
+}
+
+.team-card img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  display: block;
+}
+
+.team-info {
+  padding: 28px;
+}
+
+.team-info h3 {
+  font-family: 'Gravitas One', cursive;
+  font-size: 1.3rem;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.team-info .role {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gold);
+  opacity: 0.8;
+  margin-bottom: 12px;
+}
+
+.team-info p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.team-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--gold-border);
+  border-radius: 50%;
+  color: var(--gold);
+  text-decoration: none;
+  transition: all 0.3s;
+  margin-bottom: 16px;
+}
+
+.team-social:hover {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+/* Booking */
+.barber-select-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.barber-select-card {
+  background: var(--card-bg);
+  border: 1px solid var(--gold-border);
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.barber-select-card:hover {
+  border-color: var(--gold);
+}
+
+.barber-select-card.active {
+  border-color: var(--gold);
+  border-width: 2px;
+  box-shadow: 0 0 30px var(--gold-glow);
+}
+
+.barber-select-card .check-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: none;
+}
+
+.barber-select-card.active .check-badge {
+  display: block;
+}
+
+.barber-select-card img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 16px;
+  border: 2px solid var(--gold-border);
+}
+
+.barber-select-card.active img {
+  border-color: var(--gold);
+}
+
+.barber-select-card h3 {
+  font-family: 'Gravitas One', cursive;
+  font-size: 1.2rem;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.barber-select-card .role {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.barber-select-card .btn-select {
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  background: transparent;
+  padding: 10px 28px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.barber-select-card .btn-select:hover,
+.barber-select-card.active .btn-select {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+.embed-title {
+  font-family: 'Gravitas One', cursive;
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#cal-embed {
+  min-height: 600px;
+  background: var(--navy);
+  border: 1px solid var(--gold-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.go-back-link {
+  display: block;
+  text-align: center;
+  margin-top: 24px;
+  color: var(--gold);
+  text-decoration: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.go-back-link:hover {
+  opacity: 0.7;
+}
+
+/* Instagram */
+.instagram-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.instagram-item {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border-radius: 4px;
+}
+
+.instagram-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.instagram-item:hover img {
+  transform: scale(1.08);
+}
+
+.instagram-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10,22,40,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.instagram-item:hover .instagram-overlay {
+  opacity: 1;
+}
+
+.instagram-overlay i {
+  font-size: 1.8rem;
+  color: var(--gold);
+}
+
+/* Footer */
+.footer {
+  background: var(--navy-dark);
+  padding: 80px 0 0;
+  position: relative;
+}
+
+.footer-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(6,15,26,0.92), rgba(6,15,26,0.92)), url('https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=1920&q=80') center/cover no-repeat;
+  z-index: 0;
+}
+
+.footer .container {
+  position: relative;
+  z-index: 1;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 60px;
+}
+
+.footer-brand {
+  font-family: 'Gravitas One', cursive;
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.footer-col p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.footer-col h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--white);
+  margin-bottom: 20px;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col ul li {
+  margin-bottom: 10px;
+}
+
+.footer-col a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.footer-col a:hover {
+  color: var(--gold);
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--gold);
+  padding: 24px 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .about-grid,
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .pricing-card.featured {
+    transform: none;
+  }
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .team-grid {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .instagram-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .barber-select-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links, .nav-cta {
+    display: none;
+  }
+  .hamburger {
+    display: flex;
+  }
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .instagram-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  section {
+    padding: 60px 0;
+  }
+}
+
+/* AOS overrides */
+[data-aos] {
+  pointer-events: auto;
+}
+</style>
 </head>
 <body>
 
-  <!-- ─── NAVBAR ─────────────────────────────────────────────── -->
-  <nav id="main-nav">
-    <div class="nav-logo">
-      <img src="logo.png" alt="VIP Berbernica"
-           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-      <div class="nav-logo-placeholder" style="display:none;">
-        <span class="scissors-icon">✂</span>
-        <span>VIP BERBERNICA</span>
-      </div>
-    </div>
-    <a href="#barber-section" class="nav-cta">Zakaži Termin</a>
-  </nav>
+<!-- Preloader -->
+<div id="preloader">
+  <div class="preloader-logo">VIP BERBERNICA</div>
+  <div class="preloader-bar">
+    <div class="preloader-progress" id="preloader-progress"></div>
+  </div>
+</div>
 
-  <!-- ─── HERO ───────────────────────────────────────────────── -->
-  <section id="hero">
-    <div class="hero-content">
-      <div class="hero-logo fade-in">
-        <img src="logo.png" alt="VIP Berbernica logo"
-             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-        <div class="hero-logo-placeholder" style="display:none;">
-          <span class="ph-scissors">✂️</span>
-          <span class="ph-name">VIP BERBERNICA</span>
-          <span class="ph-sub">ESTD 2023</span>
-        </div>
-      </div>
-      <h1 class="hero-headline fade-in fade-in-d1">Zakažite Vaš Termin</h1>
-      <p class="hero-sub fade-in fade-in-d2">
-        Izaberite frizera i izaberite vreme koje vam odgovara.
-      </p>
-      <a href="#barber-section" class="btn-primary fade-in fade-in-d3">
-        Zakažite Odmah
-        <span class="arrow">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-          </svg>
-        </span>
+<!-- Custom Cursor -->
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-follower" id="cursor-follower"></div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="container">
+    <div>
+      <span>Pratite nas</span>
+      <a href="https://instagram.com/jovanfrizer" target="_blank" rel="noopener">
+        <i class="bi bi-instagram"></i>
       </a>
     </div>
-    <div class="scroll-hint">
-      <span>Scroll</span>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="6 9 12 15 18 9"/>
-      </svg>
+    <div>Pon – Sub: 09:00 – 18:00</div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="#" class="navbar-logo">VIP BERBERNICA</a>
+    <ul class="nav-links">
+      <li><a href="#pocetna">Početna</a></li>
+      <li><a href="#about">O Nama</a></li>
+      <li><a href="#services">Usluge</a></li>
+      <li><a href="#pricing">Cenovnik</a></li>
+      <li><a href="#gallery">Galerija</a></li>
+      <li><a href="#tim">Tim</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+    <a href="#zakazivanje" class="nav-cta">Zakaži Termin</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <button class="mobile-close" id="mobile-close" aria-label="Close">&times;</button>
+  <a href="#pocetna" class="mobile-link">Početna</a>
+  <a href="#about" class="mobile-link">O Nama</a>
+  <a href="#services" class="mobile-link">Usluge</a>
+  <a href="#pricing" class="mobile-link">Cenovnik</a>
+  <a href="#gallery" class="mobile-link">Galerija</a>
+  <a href="#tim" class="mobile-link">Tim</a>
+  <a href="#kontakt" class="mobile-link">Kontakt</a>
+  <a href="#zakazivanje" class="mobile-link">Zakaži Termin</a>
+</div>
+
+<!-- Hero -->
+<section class="hero" id="pocetna">
+  <div>
+    <div class="hero-label">&#10022; PREMIUM BERBERNICA &middot; BEOGRAD &#10022;</div>
+    <h1 class="hero-title" data-aos="fade-up">
+      VAŠA FRIZURA,<br>VAŠ STIL.
+    </h1>
+    <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="100">Profesionalni frizeri. Brzo zakazivanje. Bez čekanja.</p>
+    <div class="hero-buttons" data-aos="fade-up" data-aos-delay="200">
+      <a href="#zakazivanje" class="btn-primary">Zakaži Termin</a>
+      <a href="#services" class="btn-secondary">Naše Usluge</a>
     </div>
-  </section>
+  </div>
+  <div class="scroll-indicator">
+    <span>Skroluj</span>
+    <div class="line"></div>
+  </div>
+</section>
 
-  <!-- ─── BARBER SELECTION ────────────────────────────────────── -->
-  <section id="barber-section" class="section">
-    <div class="section-inner">
-      <div class="section-header">
-        <span class="section-label fade-in">Korak 1</span>
-        <h2 class="section-title fade-in fade-in-d1">Izaberite Frizera</h2>
-        <div class="gold-line fade-in fade-in-d2"></div>
+<!-- About -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="image-frame" data-aos="fade-up">
+        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80" alt="VIP Berbernica">
       </div>
+      <div class="about-content" data-aos="fade-up" data-aos-delay="150">
+        <span class="section-label">O Nama</span>
+        <h2 class="section-title">Tradicija Susreće Moderan Stil</h2>
+        <p>U VIP Berbernici verujemo da dobar friz nije samo usluga — to je iskustvo. Naši frizeri kombinuju proverene tehnike sa savremenim trendovima kako bi rezultat prevazišao očekivanja.</p>
+        <p>Osnovana 2023. godine, izgradili smo reputaciju izvrsnosti u muškom grooming-u. Svaki klijent dobija punu pažnju u opuštajućem, sofisticiranom ambijentu.</p>
+        <a href="#services" class="btn-primary">Istraži Usluge</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <div class="barber-grid">
-        <!-- Nemanja -->
-        <div class="barber-card fade-in" id="card-nemanja" onclick="selectBarber('nemanja')">
-          <div class="barber-badge" id="badge-nemanja">✓ Izabran</div>
-          <div class="barber-photo-wrap">
-            <img src="images/nemanja.jpg" alt="Nemanja"
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-            <div class="barber-photo-placeholder" style="display:none;">
-              <div class="ph-avatar">✂</div>
-              <div class="ph-initials">NEMANJA</div>
-            </div>
-          </div>
-          <div class="barber-info">
-            <div class="barber-name">Nemanja</div>
-            <div class="barber-title">Master Frizer</div>
-            <button class="btn-select" onclick="event.stopPropagation(); selectBarber('nemanja')">
-              Izaberi
-            </button>
-          </div>
+<!-- Services -->
+<section id="services">
+  <div class="container">
+    <span class="section-label">Šta Nudimo</span>
+    <h2 class="section-title">Naše Usluge</h2>
+    <div class="services-grid">
+      <div class="service-card" data-aos="fade-up" data-aos-delay="0">
+        <i class="bi bi-scissors"></i>
+        <h3>Klasično Šišanje</h3>
+        <p>Precizne tehnike šišanja prilagođene obliku lica i ličnom stilu.</p>
+      </div>
+      <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+        <i class="bi bi-brush"></i>
+        <h3>Fade Šišanje</h3>
+        <p>Savršeni prelazi i gradijenti za moderan, uredan izgled.</p>
+      </div>
+      <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+        <i class="bi bi-slash-circle"></i>
+        <h3>Šišanje na Nulu</h3>
+        <p>Potpuno brijanje glave mašinicom za čist i uredan izgled.</p>
+      </div>
+      <div class="service-card" data-aos="fade-up" data-aos-delay="0">
+        <i class="bi bi-person-badge"></i>
+        <h3>Brijanje Brade</h3>
+        <p>Precizno oblikovanje i dotjerivanje brade za savršen izgled.</p>
+      </div>
+      <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+        <i class="bi bi-pencil"></i>
+        <h3>Korekcija Brade</h3>
+        <p>Profesionalna korekcija kontura i oblika brade.</p>
+      </div>
+      <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+        <i class="bi bi-gem"></i>
+        <h3>Kombinirane Usluge</h3>
+        <p>Šišanje i korekcija brade u jednoj poseti po povoljnoj ceni.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing">
+  <div class="container">
+    <span class="section-label">Cenovnik</span>
+    <h2 class="section-title">Naše Usluge i Cene</h2>
+    <div class="pricing-grid">
+      <div class="pricing-card" data-aos="fade-up" data-aos-delay="0">
+        <div class="pricing-label">Osnovno</div>
+        <ul class="pricing-list">
+          <li><span>Klasično šišanje</span><span class="price">600 RSD</span></li>
+          <li><span>Šišanje na 0</span><span class="price">500 RSD</span></li>
+          <li><span>Brijanje glave</span><span class="price">+200 RSD</span></li>
+        </ul>
+        <a href="#zakazivanje" class="btn-primary">Zakaži</a>
+      </div>
+      <div class="pricing-card featured" data-aos="fade-up" data-aos-delay="100">
+        <div class="pricing-badge">Najpopularnije</div>
+        <div class="pricing-label">Popularno</div>
+        <ul class="pricing-list">
+          <li><span>Fade šišanje</span><span class="price">900 RSD</span></li>
+          <li><span>Brijanje brade</span><span class="price">400 RSD</span></li>
+          <li><span>Korekcija brade</span><span class="price">500 RSD</span></li>
+        </ul>
+        <a href="#zakazivanje" class="btn-primary">Zakaži</a>
+      </div>
+      <div class="pricing-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="pricing-label">Kombinovano</div>
+        <ul class="pricing-list">
+          <li><span>Klasično šišanje + korekcija brade</span><span class="price">1.000 RSD</span></li>
+          <li><span>Fade šišanje + korekcija brade</span><span class="price">1.400 RSD</span></li>
+        </ul>
+        <a href="#zakazivanje" class="btn-primary">Zakaži</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section id="gallery">
+  <div class="container">
+    <span class="section-label">Naš Rad</span>
+    <h2 class="section-title">Galerija</h2>
+    <div class="gallery-grid">
+      <a href="https://images.unsplash.com/photo-1621605815971-8e4b1234b7a3?w=600&q=80" data-fancybox="gallery" class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1621605815971-8e4b1234b7a3?w=600&q=80" alt="Galerija 1">
+        <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
+      </a>
+      <a href="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&q=80" data-fancybox="gallery" class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&q=80" alt="Galerija 2">
+        <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
+      </a>
+      <a href="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&q=80" data-fancybox="gallery" class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&q=80" alt="Galerija 3">
+        <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
+      </a>
+      <a href="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&q=80" data-fancybox="gallery" class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&q=80" alt="Galerija 4">
+        <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
+      </a>
+      <a href="https://images.unsplash.com/photo-1567894340315-735d7c361db0?w=600&q=80" data-fancybox="gallery" class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1567894340315-735d7c361db0?w=600&q=80" alt="Galerija 5">
+        <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
+      </a>
+      <a href="https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=600&q=80" data-fancybox="gallery" class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=600&q=80" alt="Galerija 6">
+        <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
+      </a>
+      <a href="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&q=80" data-fancybox="gallery" class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&q=80" alt="Galerija 7">
+        <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
+      </a>
+      <a href="https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=600&q=80" data-fancybox="gallery" class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=600&q=80" alt="Galerija 8">
+        <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features">
+  <div class="container">
+    <div class="features-grid">
+      <div class="image-frame" data-aos="fade-up">
+        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=800&q=80" alt="Frizer">
+      </div>
+      <div data-aos="fade-up" data-aos-delay="150">
+        <span class="section-label">Zašto Mi</span>
+        <h2 class="section-title">Šta Nas Izdvaja</h2>
+        <ul class="feature-list">
+          <li><i class="bi bi-check-circle-fill"></i> Iskusni Master Frizeri</li>
+          <li><i class="bi bi-check-circle-fill"></i> Moderna Oprema i Tehnike</li>
+          <li><i class="bi bi-check-circle-fill"></i> Opuštajuća Atmosfera</li>
+          <li><i class="bi bi-check-circle-fill"></i> Online Zakazivanje</li>
+          <li><i class="bi bi-check-circle-fill"></i> Personalizovani Pristup</li>
+          <li><i class="bi bi-check-circle-fill"></i> Zadovoljstvo Garantovano</li>
+          <li><i class="bi bi-check-circle-fill"></i> Tačnost i Poštovanje Vašeg Vremena</li>
+          <li><i class="bi bi-check-circle-fill"></i> Povoljne Cene</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Team -->
+<section id="tim">
+  <div class="container">
+    <span class="section-label">Naš Tim</span>
+    <h2 class="section-title">Upoznajte Frizere</h2>
+    <div class="team-grid">
+      <div class="team-card" data-aos="fade-up" data-aos-delay="0">
+        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&q=80" alt="Nemanja">
+        <div class="team-info">
+          <h3>NEMANJA</h3>
+          <div class="role">Master Frizer</div>
+          <p>Specijalista za fade tehnike i klasična šišanja sa višegodišnjim iskustvom.</p>
+          <a href="https://instagram.com/jovanfrizer" target="_blank" rel="noopener" class="team-social"><i class="bi bi-instagram"></i></a>
+          <br>
+          <button class="btn-primary btn-book-nemanja" data-barber="nemanja">Zakaži sa Nemanjom</button>
         </div>
-
-        <!-- Jovan -->
-        <div class="barber-card fade-in fade-in-d1" id="card-jovan" onclick="selectBarber('jovan')">
-          <div class="barber-badge" id="badge-jovan">✓ Izabran</div>
-          <div class="barber-photo-wrap">
-            <img src="images/jovan.jpg" alt="Jovan"
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-            <div class="barber-photo-placeholder" style="display:none;">
-              <div class="ph-avatar">✂</div>
-              <div class="ph-initials">JOVAN</div>
-            </div>
-          </div>
-          <div class="barber-info">
-            <div class="barber-name">Jovan</div>
-            <div class="barber-title">Master Frizer</div>
-            <button class="btn-select" onclick="event.stopPropagation(); selectBarber('jovan')">
-              Izaberi
-            </button>
-          </div>
+      </div>
+      <div class="team-card" data-aos="fade-up" data-aos-delay="150">
+        <img src="https://images.unsplash.com/photo-1567894340315-735d7c361db0?w=600&q=80" alt="Jovan">
+        <div class="team-info">
+          <h3>JOVAN</h3>
+          <div class="role">Master Frizer</div>
+          <p>Ekspert za precizne korekcije brade i moderan styling.</p>
+          <a href="https://instagram.com/jovanfrizer" target="_blank" rel="noopener" class="team-social"><i class="bi bi-instagram"></i></a>
+          <br>
+          <button class="btn-primary btn-book-jovan" data-barber="jovan">Zakaži sa Jovanom</button>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── BOOKING SECTION ─────────────────────────────────────── -->
-  <section id="booking-section" class="section">
-    <div class="section-inner">
-      <div class="section-header booking-title-wrap">
-        <span class="section-label">Korak 2</span>
-        <h2 class="section-title" id="booking-title">Izaberite Termin</h2>
-        <div class="gold-line"></div>
+<!-- Booking -->
+<section id="zakazivanje">
+  <div class="container">
+    <span class="section-label">Zakazivanje</span>
+    <h2 class="section-title">Zakažite Vaš Termin</h2>
+    <p style="text-align:center; color: var(--muted); margin-bottom: 48px; max-width: 600px; margin-left: auto; margin-right: auto;">Izaberite frizera i slobodan termin koji vam odgovara.</p>
+
+    <!-- Step 1: Barber Selection -->
+    <div class="barber-select-grid" id="barber-selection">
+      <div class="barber-select-card" id="card-nemanja" data-barber="nemanja">
+        <div class="check-badge">&#10003; Izabran</div>
+        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&q=80" alt="Nemanja">
+        <h3>NEMANJA</h3>
+        <div class="role">Master Frizer</div>
+        <button class="btn-select" data-barber="nemanja">Izaberi</button>
       </div>
-
-      <div id="cal-embed">
-        <div id="cal-embed-placeholder">
-          <div class="ph-icon">📅</div>
-          <p>
-            Molimo vas da prvo <strong>izaberete frizera</strong> gore,<br />
-            a zatim će se kalendar prikazati ovde.
-          </p>
-        </div>
-      </div>
-
-      <button class="back-link" id="back-btn" onclick="resetSelection()" style="display:none;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
-        </svg>
-        Zelite drugog frizera? Vratite se na izbor
-      </button>
-    </div>
-  </section>
-
-  <!-- ─── CENOVNIK ────────────────────────────────────────────── -->
-  <section id="cenovnik-section" class="section">
-    <div class="section-inner">
-      <div class="section-header">
-        <span class="section-label fade-in">Usluge</span>
-        <h2 class="section-title fade-in fade-in-d1">Cenovnik</h2>
-        <div class="gold-line fade-in fade-in-d2"></div>
-      </div>
-      <div class="cenovnik-wrap">
-        <div class="cenovnik-img-container fade-in">
-          <img src="cenovnik.png" alt="VIP Berbernica Cenovnik"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-          <div class="cenovnik-placeholder" style="display:none;">
-            <div class="ph-icon">📋</div>
-            <p>[CENOVNIK IMAGE]</p>
-          </div>
-        </div>
+      <div class="barber-select-card" id="card-jovan" data-barber="jovan">
+        <div class="check-badge">&#10003; Izabran</div>
+        <img src="https://images.unsplash.com/photo-1567894340315-735d7c361db0?w=600&q=80" alt="Jovan">
+        <h3>JOVAN</h3>
+        <div class="role">Master Frizer</div>
+        <button class="btn-select" data-barber="jovan">Izaberi</button>
       </div>
     </div>
-  </section>
 
-  <!-- ─── FOOTER ──────────────────────────────────────────────── -->
-  <footer>
-    <div class="footer-logo">
-      <img src="logo.png" alt="VIP Berbernica"
-           onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
-      <div class="footer-logo-placeholder" style="display:none;">
-        <span class="scissors-sm">✂</span>
-        <span>VIP BERBERNICA</span>
+    <!-- Step 2: Cal.com Embed -->
+    <div id="embed-wrapper" style="display:none;">
+      <div class="embed-title" id="embed-title">Izaberite Termin</div>
+      <div id="cal-embed"></div>
+      <a class="go-back-link" id="go-back-link">&larr; Želite drugog frizera? Vratite se na izbor</a>
+    </div>
+  </div>
+</section>
+
+<!-- Instagram -->
+<section id="instagram">
+  <div class="container">
+    <span class="section-label">@jovanfrizer</span>
+    <h2 class="section-title">Pratite Nas na Instagramu</h2>
+    <div class="instagram-grid">
+      <a href="https://instagram.com/jovanfrizer" target="_blank" rel="noopener" class="instagram-item">
+        <img src="https://images.unsplash.com/photo-1621605815971-8e4b1234b7a3?w=600&q=80" alt="Instagram">
+        <div class="instagram-overlay"><i class="bi bi-instagram"></i></div>
+      </a>
+      <a href="https://instagram.com/jovanfrizer" target="_blank" rel="noopener" class="instagram-item">
+        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&q=80" alt="Instagram">
+        <div class="instagram-overlay"><i class="bi bi-instagram"></i></div>
+      </a>
+      <a href="https://instagram.com/jovanfrizer" target="_blank" rel="noopener" class="instagram-item">
+        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&q=80" alt="Instagram">
+        <div class="instagram-overlay"><i class="bi bi-instagram"></i></div>
+      </a>
+      <a href="https://instagram.com/jovanfrizer" target="_blank" rel="noopener" class="instagram-item">
+        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&q=80" alt="Instagram">
+        <div class="instagram-overlay"><i class="bi bi-instagram"></i></div>
+      </a>
+      <a href="https://instagram.com/jovanfrizer" target="_blank" rel="noopener" class="instagram-item">
+        <img src="https://images.unsplash.com/photo-1567894340315-735d7c361db0?w=600&q=80" alt="Instagram">
+        <div class="instagram-overlay"><i class="bi bi-instagram"></i></div>
+      </a>
+      <a href="https://instagram.com/jovanfrizer" target="_blank" rel="noopener" class="instagram-item">
+        <img src="https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=600&q=80" alt="Instagram">
+        <div class="instagram-overlay"><i class="bi bi-instagram"></i></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer" id="kontakt">
+  <div class="footer-bg"></div>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-brand">VIP BERBERNICA</div>
+        <p>Premium berbernica u srcu Beograda. Tradicija susreće moderan stil.</p>
+        <a href="https://instagram.com/jovanfrizer" target="_blank" rel="noopener" class="team-social"><i class="bi bi-instagram"></i></a>
+      </div>
+      <div class="footer-col">
+        <h4>Brze Veze</h4>
+        <ul>
+          <li><a href="#pocetna">Početna</a></li>
+          <li><a href="#about">O Nama</a></li>
+          <li><a href="#services">Usluge</a></li>
+          <li><a href="#pricing">Cenovnik</a></li>
+          <li><a href="#gallery">Galerija</a></li>
+          <li><a href="#tim">Tim</a></li>
+          <li><a href="#zakazivanje">Zakazivanje</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Usluge</h4>
+        <ul>
+          <li><a href="#services">Klasično Šišanje</a></li>
+          <li><a href="#services">Fade Šišanje</a></li>
+          <li><a href="#services">Šišanje na Nulu</a></li>
+          <li><a href="#services">Brijanje Brade</a></li>
+          <li><a href="#services">Korekcija Brade</a></li>
+          <li><a href="#services">Kombinirane Usluge</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Radno Vreme</h4>
+        <ul>
+          <li>Ponedeljak – Petak 09:00 – 18:00</li>
+          <li>Subota 09:00 – 18:00</li>
+          <li>Nedelja Zatvoreno</li>
+        </ul>
       </div>
     </div>
-    <div class="footer-name">VIP Berbernica · Estd. 2023</div>
-    <a href="https://instagram.com/jovanfrizer" class="footer-ig" target="_blank" rel="noopener">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-        <circle cx="12" cy="12" r="4"/>
-        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
-      </svg>
-      @jovanfrizer
-    </a>
-    <div class="footer-divider"></div>
-    <div class="footer-hours">Ponedeljak – Subota &nbsp;·&nbsp; 09:00 – 18:00</div>
-  </footer>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      &copy; 2025 VIP Berbernica. Sva prava zadržana.
+    </div>
+  </div>
+</footer>
 
-  <!-- ─── CAL.COM EMBED SCRIPT ────────────────────────────────── -->
-  <script src="https://app.cal.com/embed/embed.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+// ============================================
+// REPLACE THESE WITH YOUR REAL CAL.COM LINKS
+// ============================================
+const CAL_LINK_NEMANJA = "https://cal.com/matija-ivkovic-qvrktv/zakazivanje-termina-1";
+const CAL_LINK_JOVAN = "https://cal.com/matija-ivkovic-qvrktv/jovan";
+// ============================================
 
-  <script>
-    /* ── Cal.com links ─────────────────────────────────────────── */
-    const CAL_LINK_NEMANJA = "matija-ivkovic-qvrktv/zakazivanje-termina-1";
-    const CAL_LINK_JOVAN   = "matija-ivkovic-qvrktv/jovan";
+// State
+let selectedBarber = null;
 
-    /* ── State ──────────────────────────────────────────────────── */
-    let selectedBarber = null;
+// Preloader
+const preloader = document.getElementById('preloader');
+const preloaderProgress = document.getElementById('preloader-progress');
 
-    /* ── Navbar scroll effect ───────────────────────────────────── */
-    window.addEventListener('scroll', () => {
-      document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 40);
+setTimeout(() => {
+  preloaderProgress.style.width = '100%';
+}, 100);
+
+setTimeout(() => {
+  preloader.style.opacity = '0';
+}, 2800);
+
+setTimeout(() => {
+  preloader.style.display = 'none';
+}, 3100);
+
+// Custom Cursor
+const cursorDot = document.getElementById('cursor-dot');
+const cursorFollower = document.getElementById('cursor-follower');
+
+let mouseX = 0, mouseY = 0;
+let followerX = 0, followerY = 0;
+
+if (window.matchMedia('(pointer: fine)').matches) {
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursorDot.style.left = mouseX + 'px';
+    cursorDot.style.top = mouseY + 'px';
+  });
+
+  document.addEventListener('mousedown', () => {
+    cursorFollower.classList.add('cursor--active');
+  });
+
+  document.addEventListener('mouseup', () => {
+    cursorFollower.classList.remove('cursor--active');
+  });
+
+  function animateCursor() {
+    followerX += (mouseX - followerX) * 0.15;
+    followerY += (mouseY - followerY) * 0.15;
+    cursorFollower.style.left = followerX + 'px';
+    cursorFollower.style.top = followerY + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+}
+
+// Navbar scroll
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 80) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+});
+
+// Mobile menu
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+const mobileClose = document.getElementById('mobile-close');
+const mobileLinks = document.querySelectorAll('.mobile-link');
+
+hamburger.addEventListener('click', () => {
+  mobileMenu.classList.add('open');
+});
+
+mobileClose.addEventListener('click', () => {
+  mobileMenu.classList.remove('open');
+});
+
+mobileLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+  });
+});
+
+// Fancybox
+Fancybox.bind('[data-fancybox="gallery"]');
+
+// AOS
+AOS.init({
+  duration: 700,
+  once: true,
+  offset: 80
+});
+
+// Booking state machine
+const cardNemanja = document.getElementById('card-nemanja');
+const cardJovan = document.getElementById('card-jovan');
+const embedWrapper = document.getElementById('embed-wrapper');
+const embedTitle = document.getElementById('embed-title');
+const calEmbed = document.getElementById('cal-embed');
+const goBackLink = document.getElementById('go-back-link');
+
+function selectBarber(barber) {
+  selectedBarber = barber;
+
+  if (barber === 'nemanja') {
+    cardNemanja.classList.add('active');
+    cardJovan.classList.remove('active');
+    embedTitle.textContent = 'Izaberite Termin sa Nemanjom';
+    loadCalEmbed(CAL_LINK_NEMANJA);
+  } else if (barber === 'jovan') {
+    cardJovan.classList.add('active');
+    cardNemanja.classList.remove('active');
+    embedTitle.textContent = 'Izaberite Termin sa Jovanom';
+    loadCalEmbed(CAL_LINK_JOVAN);
+  }
+
+  embedWrapper.style.display = 'block';
+  setTimeout(() => {
+    embedWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+function loadCalEmbed(link) {
+  calEmbed.innerHTML = '';
+  if (typeof Cal !== 'undefined' && link && link !== 'CAL_LINK_NEMANJA' && link !== 'CAL_LINK_JOVAN') {
+    Cal.inline({
+      elementOrSelector: '#cal-embed',
+      calLink: link,
+      config: {
+        theme: 'dark'
+      }
     });
+  }
+}
 
-    /* ── Intersection observer for fade-in animations ────────────── */
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.12 });
+function resetBooking() {
+  selectedBarber = null;
+  cardNemanja.classList.remove('active');
+  cardJovan.classList.remove('active');
+  calEmbed.innerHTML = '';
+  embedWrapper.style.display = 'none';
+  document.getElementById('barber-selection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+// Barber selection cards
+document.querySelectorAll('.barber-select-card .btn-select').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    selectBarber(btn.dataset.barber);
+  });
+});
 
-    /* ── Barber selection ───────────────────────────────────────── */
-    function selectBarber(name) {
-      selectedBarber = name;
+// Team section buttons
+document.querySelectorAll('.btn-book-nemanja, .btn-book-jovan').forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectBarber(btn.dataset.barber);
+  });
+});
 
-      ['nemanja', 'jovan'].forEach(b => {
-        document.getElementById('card-' + b).classList.toggle('selected', b === name);
-      });
-
-      const label = name === 'nemanja' ? 'Nemanjom' : 'Jovanom';
-      document.getElementById('booking-title').textContent = 'Izaberite Termin sa ' + label;
-
-      document.getElementById('back-btn').style.display = 'flex';
-
-      loadCalEmbed(name === 'nemanja' ? CAL_LINK_NEMANJA : CAL_LINK_JOVAN);
-
-      setTimeout(() => {
-        document.getElementById('booking-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 120);
-    }
-
-    /* ── Cal.com embed loader ───────────────────────────────────── */
-    function loadCalEmbed(calLink) {
-      const container = document.getElementById('cal-embed');
-
-      container.innerHTML = '';
-
-      const mountDiv = document.createElement('div');
-      mountDiv.id = 'cal-mount-' + Date.now();
-      mountDiv.style.cssText = 'width:100%; min-height:600px;';
-      container.appendChild(mountDiv);
-
-      const tryInit = () => {
-        if (typeof Cal !== 'undefined') {
-          Cal('inline', {
-            elementOrSelector: '#' + mountDiv.id,
-            calLink: calLink,
-            config: {
-              theme: 'dark',
-              layout: 'month_view',
-            }
-          });
-
-          Cal('on', {
-            action: 'linkReady',
-            callback: () => {
-              const iframe = container.querySelector('iframe');
-              if (iframe) {
-                iframe.style.cssText = 'border:none; border-radius:12px; width:100%; min-height:600px;';
-              }
-            }
-          });
-        } else {
-          setTimeout(tryInit, 200);
-        }
-      };
-
-      tryInit();
-    }
-
-    /* ── Reset selection ────────────────────────────────────────── */
-    function resetSelection() {
-      selectedBarber = null;
-
-      ['nemanja', 'jovan'].forEach(b => {
-        document.getElementById('card-' + b).classList.remove('selected');
-      });
-
-      document.getElementById('booking-title').textContent = 'Izaberite Termin';
-
-      const container = document.getElementById('cal-embed');
-      container.innerHTML = `
-        <div id="cal-embed-placeholder">
-          <div class="ph-icon">📅</div>
-          <p>
-            Molimo vas da prvo <strong>izaberete frizera</strong> gore,<br />
-            a zatim ce se kalendar prikazati ovde.
-          </p>
-        </div>
-      `;
-
-      document.getElementById('back-btn').style.display = 'none';
-
-      document.getElementById('barber-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  </script>
-
+// Go back link
+goBackLink.addEventListener('click', (e) => {
+  e.preventDefault();
+  resetBooking();
+});
+</script>
 </body>
 </html>
