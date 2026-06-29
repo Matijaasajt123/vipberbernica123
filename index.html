@@ -7,7 +7,7 @@
 <title>VIP Berbernica — Premium Berbernica Lajkovac</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gravitas+One&family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css">
 <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet">
@@ -36,7 +36,7 @@ html {
 }
 
 body {
-  font-family: 'Inter Tight', sans-serif;
+  font-family: 'Libre Baskerville', serif;
   background: var(--navy);
   color: var(--white);
   overflow-x: hidden;
@@ -62,10 +62,10 @@ body {
 }
 
 .preloader-logo {
-  font-family: 'Gravitas One', cursive;
+  font-family: 'Libre Baskerville', serif;
   font-size: 2rem;
   color: var(--gold);
-  letter-spacing: 4px;
+  letter-spacing: 2px;
   margin-bottom: 2rem;
 }
 
@@ -163,7 +163,7 @@ body {
 }
 
 .navbar-logo {
-  font-family: 'Gravitas One', cursive;
+  font-family: 'Libre Baskerville', serif;
   font-size: 1.3rem;
   color: var(--gold);
   text-decoration: none;
@@ -266,7 +266,7 @@ body {
 .mobile-menu a {
   color: var(--white);
   text-decoration: none;
-  font-family: 'Gravitas One', cursive;
+  font-family: 'Libre Baskerville', serif;
   font-size: 1.5rem;
   letter-spacing: 2px;
   transition: color 0.3s;
@@ -327,19 +327,21 @@ body {
 }
 
 .hero-title {
-  font-family: 'Gravitas One', cursive;
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  line-height: 1.1;
+  font-family: 'Libre Baskerville', serif;
+  font-size: clamp(2.2rem, 5.5vw, 4.5rem);
+  line-height: 1.2;
+  font-weight: 700;
   color: var(--white);
   margin-bottom: 24px;
 }
 
 .hero-subtitle {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--muted);
   max-width: 500px;
   margin: 0 auto 40px;
-  font-weight: 300;
+  font-weight: 400;
+  line-height: 1.7;
 }
 
 .hero-buttons {
@@ -422,8 +424,10 @@ section {
 }
 
 .section-title {
-  font-family: 'Gravitas One', cursive;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-family: 'Libre Baskerville', serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.3;
   margin-bottom: 48px;
   color: var(--white);
 }
@@ -466,46 +470,6 @@ section {
   font-size: 0.95rem;
 }
 
-/* Services */
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.service-card {
-  background: var(--card-bg);
-  border: 1px solid var(--gold-border);
-  border-radius: 8px;
-  padding: 40px 28px;
-  text-align: center;
-  transition: transform 0.3s, border-color 0.3s;
-}
-
-.service-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--gold);
-}
-
-.service-card i {
-  font-size: 2.2rem;
-  color: var(--gold);
-  margin-bottom: 20px;
-  display: block;
-}
-
-.service-card h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--white);
-}
-
-.service-card p {
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.6;
-}
 
 /* Pricing */
 .pricing-grid {
@@ -593,7 +557,7 @@ section {
 /* Gallery */
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
 
@@ -601,7 +565,7 @@ section {
   position: relative;
   overflow: hidden;
   border-radius: 8px;
-  aspect-ratio: 1;
+  aspect-ratio: 9 / 16;
 }
 
 .gallery-item img {
@@ -686,8 +650,9 @@ section {
 
 .team-card img {
   width: 100%;
-  height: 320px;
+  height: 420px;
   object-fit: cover;
+  object-position: top;
   display: block;
 }
 
@@ -696,8 +661,10 @@ section {
 }
 
 .team-info h3 {
-  font-family: 'Gravitas One', cursive;
-  font-size: 1.3rem;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
   color: var(--gold);
   margin-bottom: 4px;
 }
@@ -798,7 +765,7 @@ section {
 }
 
 .barber-select-card h3 {
-  font-family: 'Gravitas One', cursive;
+  font-family: 'Libre Baskerville', serif;
   font-size: 1.2rem;
   color: var(--gold);
   margin-bottom: 4px;
@@ -834,7 +801,7 @@ section {
 }
 
 .embed-title {
-  font-family: 'Gravitas One', cursive;
+  font-family: 'Libre Baskerville', serif;
   font-size: 1.4rem;
   color: var(--gold);
   margin-bottom: 20px;
@@ -930,14 +897,16 @@ section {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  grid-template-columns: 1.5fr 1fr 1fr;
   gap: 48px;
   padding-bottom: 60px;
 }
 
 .footer-brand {
-  font-family: 'Gravitas One', cursive;
-  font-size: 1.4rem;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
   color: var(--gold);
   margin-bottom: 16px;
 }
@@ -994,9 +963,6 @@ section {
     grid-template-columns: 1fr;
     gap: 40px;
   }
-  .services-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .pricing-grid {
     grid-template-columns: 1fr;
     max-width: 400px;
@@ -1031,11 +997,8 @@ section {
   .hamburger {
     display: flex;
   }
-  .services-grid {
-    grid-template-columns: 1fr;
-  }
   .gallery-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
   .instagram-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1090,7 +1053,6 @@ section {
     <ul class="nav-links">
       <li><a href="#pocetna">Početna</a></li>
       <li><a href="#about">O Nama</a></li>
-      <li><a href="#services">Usluge</a></li>
       <li><a href="#pricing">Cenovnik</a></li>
       <li><a href="#gallery">Galerija</a></li>
       <li><a href="#tim">Tim</a></li>
@@ -1110,7 +1072,6 @@ section {
   <button class="mobile-close" id="mobile-close" aria-label="Close">&times;</button>
   <a href="#pocetna" class="mobile-link">Početna</a>
   <a href="#about" class="mobile-link">O Nama</a>
-  <a href="#services" class="mobile-link">Usluge</a>
   <a href="#pricing" class="mobile-link">Cenovnik</a>
   <a href="#gallery" class="mobile-link">Galerija</a>
   <a href="#tim" class="mobile-link">Tim</a>
@@ -1128,7 +1089,6 @@ section {
     <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="100">Profesionalni frizeri. Brzo zakazivanje. Bez čekanja.</p>
     <div class="hero-buttons" data-aos="fade-up" data-aos-delay="200">
       <a href="#zakazivanje" class="btn-primary">Zakaži Termin</a>
-      <a href="#services" class="btn-secondary">Naše Usluge</a>
     </div>
   </div>
   <div class="scroll-indicator">
@@ -1149,51 +1109,11 @@ section {
         <h2 class="section-title">Tradicija Susreće Moderan Stil</h2>
         <p>U VIP Berbernici verujemo da dobar friz nije samo usluga — to je iskustvo. Naši frizeri kombinuju proverene tehnike sa savremenim trendovima kako bi rezultat prevazišao očekivanja.</p>
         <p>Osnovana 2023. godine, izgradili smo reputaciju izvrsnosti u muškom grooming-u u Lajkovcu. Svaki klijent dobija punu pažnju u opuštajućem, sofisticiranom ambijentu.</p>
-        <a href="#services" class="btn-primary">Istraži Usluge</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Services -->
-<section id="services">
-  <div class="container">
-    <span class="section-label">Šta Nudimo</span>
-    <h2 class="section-title">Naše Usluge</h2>
-    <div class="services-grid">
-      <div class="service-card" data-aos="fade-up" data-aos-delay="0">
-        <i class="bi bi-scissors"></i>
-        <h3>Klasično Šišanje</h3>
-        <p>Precizne tehnike šišanja prilagođene obliku lica i ličnom stilu.</p>
-      </div>
-      <div class="service-card" data-aos="fade-up" data-aos-delay="100">
-        <i class="bi bi-brush"></i>
-        <h3>Fade Šišanje</h3>
-        <p>Savršeni prelazi i gradijenti za moderan, uredan izgled.</p>
-      </div>
-      <div class="service-card" data-aos="fade-up" data-aos-delay="200">
-        <i class="bi bi-slash-circle"></i>
-        <h3>Šišanje na Nulu</h3>
-        <p>Potpuno brijanje glave mašinicom za čist i uredan izgled.</p>
-      </div>
-      <div class="service-card" data-aos="fade-up" data-aos-delay="0">
-        <i class="bi bi-person-badge"></i>
-        <h3>Brijanje Brade</h3>
-        <p>Precizno oblikovanje i dotjerivanje brade za savršen izgled.</p>
-      </div>
-      <div class="service-card" data-aos="fade-up" data-aos-delay="100">
-        <i class="bi bi-pencil"></i>
-        <h3>Korekcija Brade</h3>
-        <p>Profesionalna korekcija kontura i oblika brade.</p>
-      </div>
-      <div class="service-card" data-aos="fade-up" data-aos-delay="200">
-        <i class="bi bi-gem"></i>
-        <h3>Kombinirane Usluge</h3>
-        <p>Šišanje i korekcija brade u jednoj poseti po povoljnoj ceni.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- Pricing -->
 <section id="pricing">
@@ -1238,36 +1158,28 @@ section {
     <span class="section-label">Naš Rad</span>
     <h2 class="section-title">Galerija</h2>
     <div class="gallery-grid">
-      <a href="https://images.unsplash.com/photo-1621605815971-8e4b1234b7a3?w=600&q=80" data-fancybox="gallery" class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1621605815971-8e4b1234b7a3?w=600&q=80" alt="Galerija 1">
+      <a href="slika1.png" data-fancybox="gallery" class="gallery-item">
+        <img src="slika1.png" alt="Galerija 1">
         <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
       </a>
-      <a href="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&q=80" data-fancybox="gallery" class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&q=80" alt="Galerija 2">
+      <a href="slika2.png" data-fancybox="gallery" class="gallery-item">
+        <img src="slika2.png" alt="Galerija 2">
         <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
       </a>
-      <a href="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&q=80" data-fancybox="gallery" class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&q=80" alt="Galerija 3">
+      <a href="slika3.png" data-fancybox="gallery" class="gallery-item">
+        <img src="slika3.png" alt="Galerija 3">
         <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
       </a>
-      <a href="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&q=80" data-fancybox="gallery" class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&q=80" alt="Galerija 4">
+      <a href="slika4.png" data-fancybox="gallery" class="gallery-item">
+        <img src="slika4.png" alt="Galerija 4">
         <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
       </a>
-      <a href="https://images.unsplash.com/photo-1567894340315-735d7c361db0?w=600&q=80" data-fancybox="gallery" class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1567894340315-735d7c361db0?w=600&q=80" alt="Galerija 5">
+      <a href="slika5.png" data-fancybox="gallery" class="gallery-item">
+        <img src="slika5.png" alt="Galerija 5">
         <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
       </a>
-      <a href="https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=600&q=80" data-fancybox="gallery" class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=600&q=80" alt="Galerija 6">
-        <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
-      </a>
-      <a href="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&q=80" data-fancybox="gallery" class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&q=80" alt="Galerija 7">
-        <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
-      </a>
-      <a href="https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=600&q=80" data-fancybox="gallery" class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=600&q=80" alt="Galerija 8">
+      <a href="slika6.png" data-fancybox="gallery" class="gallery-item">
+        <img src="slika6.png" alt="Galerija 6">
         <div class="gallery-overlay"><i class="bi bi-zoom-in"></i></div>
       </a>
     </div>
@@ -1283,7 +1195,7 @@ section {
     <h2 class="section-title">Upoznajte Frizere</h2>
     <div class="team-grid">
       <div class="team-card" data-aos="fade-up" data-aos-delay="0">
-        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&q=80" alt="Nemanja">
+        <img src="nemanja.png" alt="Nemanja">
         <div class="team-info">
           <h3>NEMANJA</h3>
           <div class="role">Master Frizer</div>
@@ -1294,7 +1206,7 @@ section {
         </div>
       </div>
       <div class="team-card" data-aos="fade-up" data-aos-delay="150">
-        <img src="https://images.unsplash.com/photo-1567894340315-735d7c361db0?w=600&q=80" alt="Jovan">
+        <img src="jovan.png" alt="Jovan">
         <div class="team-info">
           <h3>JOVAN</h3>
           <div class="role">Master Frizer</div>
@@ -1319,14 +1231,14 @@ section {
     <div class="barber-select-grid" id="barber-selection">
       <div class="barber-select-card" id="card-nemanja" data-barber="nemanja">
         <div class="check-badge">&#10003; Izabran</div>
-        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&q=80" alt="Nemanja">
+        <img src="nemanja.png" alt="Nemanja">
         <h3>NEMANJA</h3>
         <div class="role">Master Frizer</div>
         <button class="btn-select" data-barber="nemanja">Izaberi</button>
       </div>
       <div class="barber-select-card" id="card-jovan" data-barber="jovan">
         <div class="check-badge">&#10003; Izabran</div>
-        <img src="https://images.unsplash.com/photo-1567894340315-735d7c361db0?w=600&q=80" alt="Jovan">
+        <img src="jovan.png" alt="Jovan">
         <h3>JOVAN</h3>
         <div class="role">Master Frizer</div>
         <button class="btn-select" data-barber="jovan">Izaberi</button>
@@ -1337,35 +1249,15 @@ section {
 
 <!-- Instagram -->
 <section id="instagram">
-  <div class="container">
+  <div class="container" style="text-align: center;">
     <span class="section-label">@jovanfrizer</span>
     <h2 class="section-title">Pratite Nas na Instagramu</h2>
-    <div class="instagram-grid">
-      <a href="https://www.instagram.com/jovanfrizer/" target="_blank" rel="noopener" class="instagram-item">
-        <img src="https://images.unsplash.com/photo-1621605815971-8e4b1234b7a3?w=600&q=80" alt="Instagram">
-        <div class="instagram-overlay"><i class="bi bi-instagram"></i></div>
-      </a>
-      <a href="https://www.instagram.com/jovanfrizer/" target="_blank" rel="noopener" class="instagram-item">
-        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&q=80" alt="Instagram">
-        <div class="instagram-overlay"><i class="bi bi-instagram"></i></div>
-      </a>
-      <a href="https://www.instagram.com/jovanfrizer/" target="_blank" rel="noopener" class="instagram-item">
-        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&q=80" alt="Instagram">
-        <div class="instagram-overlay"><i class="bi bi-instagram"></i></div>
-      </a>
-      <a href="https://www.instagram.com/jovanfrizer/" target="_blank" rel="noopener" class="instagram-item">
-        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&q=80" alt="Instagram">
-        <div class="instagram-overlay"><i class="bi bi-instagram"></i></div>
-      </a>
-      <a href="https://www.instagram.com/jovanfrizer/" target="_blank" rel="noopener" class="instagram-item">
-        <img src="https://images.unsplash.com/photo-1567894340315-735d7c361db0?w=600&q=80" alt="Instagram">
-        <div class="instagram-overlay"><i class="bi bi-instagram"></i></div>
-      </a>
-      <a href="https://www.instagram.com/jovanfrizer/" target="_blank" rel="noopener" class="instagram-item">
-        <img src="https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=600&q=80" alt="Instagram">
-        <div class="instagram-overlay"><i class="bi bi-instagram"></i></div>
-      </a>
-    </div>
+    <p style="color: var(--muted); font-size: 1rem; margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto;">
+      Pratite nas na Instagramu i budite uvek u toku sa najnovijim radovima i aktuelnostima iz berbernice.
+    </p>
+    <a href="https://www.instagram.com/jovanfrizer/" target="_blank" rel="noopener" class="btn-primary">
+      <i class="bi bi-instagram" style="margin-right: 8px;"></i>@jovanfrizer
+    </a>
   </div>
 </section>
 
@@ -1385,22 +1277,10 @@ section {
         <ul>
           <li><a href="#pocetna">Početna</a></li>
           <li><a href="#about">O Nama</a></li>
-          <li><a href="#services">Usluge</a></li>
           <li><a href="#pricing">Cenovnik</a></li>
           <li><a href="#gallery">Galerija</a></li>
           <li><a href="#tim">Tim</a></li>
           <li><a href="#zakazivanje">Zakazivanje</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Usluge</h4>
-        <ul>
-          <li><a href="#services">Klasično Šišanje</a></li>
-          <li><a href="#services">Fade Šišanje</a></li>
-          <li><a href="#services">Šišanje na Nulu</a></li>
-          <li><a href="#services">Brijanje Brade</a></li>
-          <li><a href="#services">Korekcija Brade</a></li>
-          <li><a href="#services">Kombinirane Usluge</a></li>
         </ul>
       </div>
       <div class="footer-col">
